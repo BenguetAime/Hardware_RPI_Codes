@@ -1,0 +1,18 @@
+#### BOUTTON POUSSOIR :
+>>   Pull-up : La broche est normalement à l'état HIGH et passe à LOW lorsque le bouton est pressé. On peut utiliser la résistance pull-up interne de l'Arduino.
+__
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP); // Active la résistance pull-up interne
+  Serial.begin(9600);
+}
+
+
+
+
+>>   Pull-down : La broche est normalement à l'état LOW et passe à HIGH lorsque le bouton est pressé. Nécessite une résistance externe.
+__
+void setup() {
+  pinMode(buttonPin, INPUT); // Configure la broche comme entrée
+  Serial.begin(9600);
+}

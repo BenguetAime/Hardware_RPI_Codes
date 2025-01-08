@@ -1,0 +1,154 @@
+###############
+
+>> COMMUNICATION RASPBERRY PI - ARDUINO !
+____ *** MINITERM ***
+---
+Miniterm : Qu'est-ce que c'est et à quoi ça sert ?
+Miniterm est un outil de terminal série inclus dans la bibliothèque Python pyserial. 
+Il permet de communiquer avec des périphériques connectés via un port série (USB, UART, etc.), 
+comme les cartes Arduino ou Raspberry Pi. C'est un outil essentiel pour le débogage et la 
+surveillance des données échangées entre un microcontrôleur et un ordinateur.
+---
+Rôle de miniterm
+miniterm est un outil de terminal simple fourni par le package pyserial, utilisé pour établir une connexion série avec un périphérique.
+
+Utilisation principale de miniterm :
+Communication avec un périphérique série :
+
+miniterm permet d'envoyer et de recevoir des données sur un port série.
+Il est souvent utilisé pour tester la communication avec un périphérique (comme un Arduino ou un microcontrôleur).
+Monitoring :
+
+miniterm affiche toutes les données envoyées par le périphérique sur le port série.
+Cela est utile pour lire des messages de débogage ou des données émises par un microcontrôleur.
+
+>>Exemple d'utilisation de -e :
+python3 -m serial.tools.miniterm /dev/ttyUSB0 9600 -e
+---
+Cela signifie que lorsque vous tapez quelque chose, le terminal affichera ce texte immédiatement, et vous pouvez interagir avec le périphérique série en voyant ce que vous tapez.
+
+----
+Si vous voulez exécuter miniterm directement comme une commande sans passer par Python :
+
+Ajoutez le chemin d'installation des exécutables Python à votre variable PATH.
+Trouvez où se trouve miniterm :
+
+bash
+Copier le code
+find / -name "miniterm" 2>/dev/null
+Ajoutez ce chemin à votre fichier ~/.bashrc ou ~/.bash_profile :
+
+bash
+Copier le code
+export PATH="$PATH:/chemin/vers/miniterm"
+Rechargez votre shell :
+
+bash
+Copier le code
+source ~/.bashrc
+
+----
+>> PATH est une variable d'environnement qui contient une liste de dossiers (séparés par des deux-points :) où le 
+système cherche les fichiers exécutables lorsque vous tapez une commande dans le terminal.
+----
+
+
+
+
+
+_____ USB - SERIE
+4. Processus de création du port USB-série virtuel
+Lorsque vous connectez un périphérique USB émulant un port série, voici ce qui se passe :
+
+-Le périphérique USB est détecté : L'ordinateur identifie le périphérique connecté via son identifiant USB (Vendor ID, Product ID).
+-Un driver est chargé : Le système d'exploitation charge un pilote (comme cdc_acm sur Linux ou usbser.sys sur Windows).
+-Un port série virtuel est créé :
+--Sous Linux : /dev/ttyACM0, /dev/ttyUSB0, etc.
+--Sous Windows : COM3, COM4, etc.
+Les logiciels peuvent utiliser ce port : Vous pouvez ouvrir ce port avec un logiciel de terminal série 
+(comme miniterm, PuTTY, ou l’IDE Arduino) et échanger des données avec le périphérique.
+
+_____ USB - SERIE
+>> 5. Exemples pratiques
+Arduino :
+-Lorsqu’un Arduino est branché via USB, il utilise une émulation série via USB.
+-L'ordinateur crée un port comme /dev/ttyACM0, permettant à l’IDE Arduino d'envoyer et de recevoir des données.
+-Adaptateur USB-to-Serial :
+Si vous connectez un adaptateur USB-to-Serial pour dialoguer avec un dispositif RS232 (ancien modem, appareil industriel), un port /dev/ttyUSB0 est créé.
+----
+Différence entre ttyACM et ttyUSB
+ttyACM : Port série virtuel basé sur le standard CDC ACM (utilisé par Arduino, modems USB, etc.).
+ttyUSB : Port série virtuel basé sur un convertisseur USB-to-Serial (puces comme FTDI, CP2102, CH340).
+----
+
+______ USB - SERIE
+/dev/ttyAMA0 :
+
+---Port série UART natif sur le Raspberry Pi.
+-Ce port est souvent utilisé pour les communications série via les broches GPIO du Raspberry Pi. Il est souvent associé à l'interface serial console de la carte, qui peut être utilisée pour la communication avec d'autres périphériques via UART.
+-Ce port est directement lié aux broches TX (GPIO14) et RX (GPIO15).
+***Note : Sur certains modèles de Raspberry Pi (comme les plus récents), ce port peut être utilisé par le Bluetooth intégré. Il peut alors être désactivé pour utiliser un adaptateur série USB ou un autre périphérique série via les broches GPIO.
+
+
+______ USB vs RS232
+>>
+1. Différence entre USB et RS232 (communication série classique)
+Bien que l'USB soit également une technologie série, il est fondamentalement différent des anciens ports RS232 qui utilisaient des câbles à broches (souvent DB9 ou DB25).
+
+---RS232 (ou série classique) :
+-Utilise une communication série asynchrone à faible vitesse.
+-Les données sont envoyées sur un seul fil, avec des signaux électriques distincts pour chaque bit de données (le 0 et le 1).
+-Il a un nombre de broches physiques fixes, et les vitesse de transmission sont limitées (9600, 19200, 115200 bauds).
+-Typiquement utilisé pour les modems, terminaux, ou des dispositifs comme les Arduino via des interfaces série classiques.
+
+---USB (Universal Serial Bus) :
+-L'USB est également un bus de communication série, mais avec un protocole bien plus complexe et une capacité de transmission beaucoup plus rapide.
+-L'USB permet une transmission de données haute vitesse, capable d'atteindre plusieurs gigabits par seconde (selon la version de l'USB, comme USB 2.0 ou 3.0).
+
+>>
+2. Pourquoi "simuler" un port série via USB ?
+Le terme "simuler" fait référence à la capacité d'un périphérique USB de se comporter comme un port série classique, tout en utilisant le bus USB comme moyen de communication sous-jacent.
+
+>> 
+3. USB et RS232 sont tous deux des types de communication série, mais leurs protocoles sont différents
+
+___ USB - SERIE
+>>
+6. Raspberry Pi et le conflit avec le Bluetooth
+-
+Sur les versions récentes du Raspberry Pi, le Bluetooth utilise également /dev/ttyAMA0, ce qui peut entraîner un conflit si vous essayez d'utiliser le port pour autre chose, comme une communication série. Dans ce cas, vous devrez peut-être désactiver le Bluetooth pour libérer le port série.
+-
+**** 
+Pour désactiver le Bluetooth et récupérer /dev/ttyAMA0, vous pouvez éditer le fichier de configuration ***/boot/config.txt*** et ajouter la ligne suivante :
+>> dtoverlay=pi3-disable-bt
+Cela désactive le Bluetooth et permet au port /dev/ttyAMA0 d'être utilisé pour d'autres communications série via les broches GPIO.
+
+
+____
+On a half-duplex interface, data can only be transmitted or received at any given time. A conversation on a two-way radio is usually half-duplex – each person must push a button to talk, and, while talking, that person can not listen.
+-
+A full-duplex interface, on the other hand, can send and receive data simultaneously. A conversation on a telephone is full duplex.
+____
+
+_____ **Notion de Ports Série**
+>>
+Notion de Ports Série
+Un port série est une interface de communication qui permet de transmettre des données bit par bit, de manière séquentielle, entre deux périphériques. Cela contraste avec les ports parallèles, où plusieurs bits sont envoyés simultanément. Les ports série sont souvent utilisés pour des communications simples, fiables et de faible vitesse.
+
+>>
+Protocoles :
+Le port série suit généralement des standards comme RS-232, UART, ou USB-to-serial.
+Un port série moderne émulé via USB peut suivre le standard CDC ACM.
+
+>>
+Types de ports série sur un ordinateur moderne :
+--Ports physiques (RS-232) :
+Ces ports étaient autrefois très courants sur les PC pour connecter des modems, imprimantes ou équipements industriels.
+Ils ont été remplacés par des interfaces comme l’USB.
+
+--Ports série émulés (via USB) :
+Les périphériques comme Arduino, convertisseurs USB-to-serial, ou modules Bluetooth utilisent des ports série virtuels.
+Ces ports apparaissent sous Linux comme /dev/ttyUSB0 ou /dev/ttyACM0.
+Ports GPIO UART (sur Raspberry Pi) :
+
+-- Un Raspberry Pi possède des broches TX et RX (généralement accessibles via /dev/ttyAMA0 ou /dev/serial0) pour des communications série bas niveau.

@@ -1,0 +1,37 @@
+####################################  THE WHOLE PROJECT
+___
+https://articulatedrobotics.xyz/tutorials/mobile-robot/project-overview
+
+___ vidéo fournissant le lient du projet entier, en description :
+https://articulatedrobotics.xyz/tutorials/mobile-robot/project-overview
+
+https://github.com/joshnewans/articubot_one
+
+___ power :
+https://www.youtube.com/watch?v=-PCuDnpgiew&list=PLunhqkrRNRhYAffV8JDiFOatQXuU-NnxT&index=7
+
+####################################  THE WHOLE PROJECT
+
+
+##############
+___
+sudo apt update
+sudo apt install -y python3-ament-cmake
+
+___
+
+
+
+#############
+__spawning urdf into gazebo : via ros_ign_gazebo
+>>https://answers.ros.org/question/413178/spawning-a-robot-in-gazebo-using-python-launch-file/
+
+
+
+############## URDF model
+>>
+https://www.youtube.com/watch?v=BcjHyhV0kIs&list=PLunhqkrRNRhYAffV8JDiFOatQXuU-NnxT&index=2
+
+>> https://github.com/joshnewans/articubot_one/tree/d5aa5e9bc9039073c0d8fd7fe426e170be79c087
+
+>> https://github.com/joshnewans/articubot_one/blob/d5aa5e9bc9039073c0d8fd7fe426e170be79c087/description/inertial_macros.xacro

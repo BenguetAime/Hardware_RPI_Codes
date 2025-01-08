@@ -1,0 +1,148 @@
+______________
+Pour répondre à votre demande de manière complète, voici les étapes et les codes nécessaires pour faire fonctionner votre système avec un Arduino Mega 2560, des moteurs GM25-370 pilotés par un L298N, des encodeurs pour mesurer la position, et une communication avec un Raspberry Pi 4 via ROS2. Le système doit être capable de contrôler les moteurs et de récupérer les données des encodeurs via un bridge ROS2.
+
+Structure du Code
+Le code sera réparti en deux parties principales :
+
+Code Arduino : Contrôle des moteurs via L298N et gestion des encodeurs.
+Code ROS2 (sur Raspberry Pi) : Communication entre le Raspberry Pi et l'Arduino via un bridge série, en utilisant ROS2 pour envoyer et recevoir les commandes.
+
+
+______________
+
+
+// ######### motor_control.h #########
+
+#ifndef MOTOR_CONTROL_H
+#define MOTOR_CONTROL_H
+
+// Déclaration des broches pour les moteurs et L298N
+const int motor1Pin1 = 26;   // sens backward (si HIGH), Moteur 1
+const int motor1Pin2 = 28;   // sens forward (si HIGH), Moteur 1
+const int motor1PWM = 10;    // Broche PWM Moteur 1
+
+const int motor2Pin1 = 22;   // sens forward (si HIGH), Moteur 2
+const int motor2Pin2 = 24;   // sens backward (si HIGH), Moteur 2
+const int motor2PWM = 11;    // Broche PWM Moteur 2
+
+// Déclaration des broches pour les encodeurs
+const int encoder1PinA = 20;  // Moteur 1, signal A
+const int encoder1PinB = 21;  // Moteur 1, signal B
+const int encoder2PinA = 18;  // Moteur 2, signal A
+const int encoder2PinB = 19;  // Moteur 2, signal B
+
+// Variables globales pour compter les impulsions des encodeurs
+volatile int encoder1Count = 0;
+volatile int encoder2Count = 0;
+
+// Variables pour stocker l'état des moteurs
+int motor1Speed = 0; // Vitesse du moteur 1 (PWM)
+int motor2Speed = 0; // Vitesse du moteur 2 (PWM)
+
+#endif
+
+// ######### motor_control.h #########
+
+
+
+// ######### main.ino #########
+
+#include <Arduino.h>
+#include "motor_control.h"
+
+// Initialisation des broches
+void setup() {
+  // Configurer les broches des moteurs
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(motor1PWM, OUTPUT);
+
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+  pinMode(motor2PWM, OUTPUT);
+
+  // Configurer les broches des encodeurs
+  pinMode(encoder1PinA, INPUT);
+  pinMode(encoder1PinB, INPUT);
+  pinMode(encoder2PinA, INPUT);
+  pinMode(encoder2PinB, INPUT);
+
+  // Attacher des interruptions pour les encodeurs
+  attachInterrupt(digitalPinToInterrupt(encoder1PinA), encoder1ISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoder2PinA), encoder2ISR, CHANGE);
+  
+  Serial.begin(115200); // Démarrer la communication série
+}
+
+// Fonction d'interruption pour encoder 1
+void encoder1ISR() {
+  int stateA = digitalRead(encoder1PinA);
+  int stateB = digitalRead(encoder1PinB);
+  encoder1Count += (stateA == stateB) ? 1 : -1; // Changer de direction en fonction du sens
+}
+
+// Fonction d'interruption pour encoder 2
+void encoder2ISR() {
+  int stateA = digitalRead(encoder2PinA);
+  int stateB = digitalRead(encoder2PinB);
+  encoder2Count += (stateA == stateB) ? 1 : -1; // Changer de direction en fonction du sens
+}
+
+// Fonction pour contrôler les moteurs
+void setMotorSpeed(int motor, int speed) {
+  if (motor == 1) {
+    if (speed > 0) {
+      digitalWrite(motor1Pin1, LOW);
+      digitalWrite(motor1Pin2, HIGH);
+      analogWrite(motor1PWM, speed);
+    } else if (speed < 0) {
+      digitalWrite(motor1Pin1, HIGH);
+      digitalWrite(motor1Pin2, LOW);
+      analogWrite(motor1PWM, -speed);
+    } else {
+      digitalWrite(motor1Pin1, LOW);
+      digitalWrite(motor1Pin2, LOW);
+      analogWrite(motor1PWM, 0);
+    }
+  } else if (motor == 2) {
+    if (speed > 0) {
+      digitalWrite(motor2Pin1, LOW);
+      digitalWrite(motor2Pin2, HIGH);
+      analogWrite(motor2PWM, speed);
+    } else if (speed < 0) {
+      digitalWrite(motor2Pin1, HIGH);
+      digitalWrite(motor2Pin2, LOW);
+      analogWrite(motor2PWM, -speed);
+    } else {
+      digitalWrite(motor2Pin1, LOW);
+      digitalWrite(motor2Pin2, LOW);
+      analogWrite(motor2PWM, 0);
+    }
+  }
+}
+
+// Boucle principale
+void loop() {
+  // Vérification des commandes reçues via le port série (ROS2 Bridge)
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    if (command.startsWith("MOTOR1")) {
+      int speed = command.substring(6).toInt();
+      setMotorSpeed(1, speed);
+    }
+    if (command.startsWith("MOTOR2")) {
+      int speed = command.substring(6).toInt();
+      setMotorSpeed(2, speed);
+    }
+  }
+
+  // Envoi des compteurs d'encodeurs via série
+  Serial.print("ENCODER1: ");
+  Serial.print(encoder1Count);
+  Serial.print(" ENCODER2: ");
+  Serial.println(encoder2Count);
+  
+  delay(100); // Petit délai pour éviter d'envoyer trop de données
+}
+
+

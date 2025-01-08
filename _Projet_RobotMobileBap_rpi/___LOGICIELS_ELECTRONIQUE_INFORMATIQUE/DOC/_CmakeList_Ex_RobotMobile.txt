@@ -1,0 +1,42 @@
+########################
+__
+un exemple complet et typique de fichiers CMakeLists.txt et package.xml pour un projet ROS 2 (Robot Operating System version 2) de robotique mobile autonome qui utilise à la fois des nœuds en C++ et Python. Ce projet pourrait inclure des fonctionnalités telles que la perception (par exemple, capteurs), la navigation autonome et l'intelligence (décisions autonomes) pour un robot mobile.
+__
+
+______________________________________________________
+cmake_minimum_required(VERSION 3.5)
+project(robot_autonome)
+
+# Trouver les dépendances nécessaires
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)  # ROS 2 C++ Client Library
+find_package(std_msgs REQUIRED) # Messages ROS standards
+find_package(geometry_msgs REQUIRED) # Messages géométriques (position, orientation)
+find_package(nav_msgs REQUIRED) # Messages pour la navigation (Odometry, Path, etc.)
+find_package(sensor_msgs REQUIRED) # Messages pour capteurs (caméra, LIDAR, etc.)
+find_package(tf2_ros REQUIRED) # Transformations de frame de référence
+find_package(rclpy REQUIRED) # Bibliothèque Python de ROS 2
+
+# Ajouter un exécutable C++ (ex: un node de contrôle du robot)
+add_executable(robot_controller src/robot_controller.cpp)
+
+# Lier les dépendances ROS à l'exécutable C++
+ament_target_dependencies(robot_controller rclcpp std_msgs geometry_msgs nav_msgs sensor_msgs tf2_ros)
+
+# Installation des exécutables C++ 
+install(TARGETS robot_controller
+  DESTINATION lib/${PROJECT_NAME})
+
+# Installation des scripts Python (ex: un node pour la perception)
+install(PROGRAMS
+  scripts/perception_node.py
+  scripts/decision_making_node.py
+  DESTINATION lib/${PROJECT_NAME})
+
+# Installer les fichiers de lancement et de configuration
+install(DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME})
+
+# Finalisation du package
+ament_package()
+____________________________________

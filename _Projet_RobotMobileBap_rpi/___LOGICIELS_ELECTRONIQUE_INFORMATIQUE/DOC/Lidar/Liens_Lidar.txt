@@ -1,0 +1,17 @@
+######
+#
+-
+https://www.ldrobot.com/en
+-
+https://github.com/ldrobotSensorTeam
+
+#
+user manual download:
+-
+https://www.gotronic.fr/art-capteur-de-distance-lidar-ld19-35884.htm
+
+#
+-
+https://www.yahboom.net/download ;
+_
+http://www.yahboom.net/study/MS200 : cours etc

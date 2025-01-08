@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Assemblage_BaseNonHolonome_ros">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.010726 0.00028706 0.031375"
+        rpy="0 0 0" />
+      <mass
+        value="1.3207" />
+      <inertia
+        ixx="0.0061761"
+        ixy="-6.0248E-06"
+        ixz="-3.0142E-07"
+        iyy="0.003574"
+        iyz="0.00010826"
+        izz="0.0095452" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.25098 0.25098 0.25098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <link
+    name="RoueAvantG_Link">
+    <inertial>
+      <origin
+        xyz="-9.5918E-09 1.5974E-08 -0.007373"
+        rpy="0 0 0" />
+      <mass
+        value="0.16695" />
+      <inertia
+        ixx="6.7293E-05"
+        ixy="-1.511E-09"
+        ixz="1.6485E-12"
+        iyy="6.7296E-05"
+        iyz="-2.7514E-12"
+        izz="0.00011321" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueAvantG_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueAvantG_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint
+    name="RoueAvantG_Joint"
+    type="continuous">
+    <origin
+      xyz="0.097644 0.028097 -0.0662"
+      rpy="0 1.5708 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="RoueAvantG_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="1000" />
+    <dynamics
+      damping="0.1"
+      friction="0.1" />
+    <safety_controller
+      k_position="10"
+      k_velocity="10" />
+
+  </joint>
+
+
+
+  <link
+    name="RoueAvantD_Link">
+    <inertial>
+      <origin
+        xyz="2.8477E-09 -1.8414E-08 -0.007373"
+        rpy="0 0 0" />
+      <mass
+        value="0.16695" />
+      <inertia
+        ixx="6.7293E-05"
+        ixy="-3.128E-10"
+        ixz="-4.8718E-13"
+        iyy="6.7296E-05"
+        iyz="3.1703E-12"
+        izz="0.00011321" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueAvantD_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueAvantD_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint
+    name="RoueAvantD_Joint"
+    type="continuous">
+    <origin
+      xyz="-0.12036 0.028097 -0.0662"
+      rpy="3.1416 1.5708 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="RoueAvantD_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="1000" />
+    <dynamics
+      damping="0.1"
+      friction="0.1" />
+    <safety_controller
+      k_position="10"
+      k_velocity="10" />
+  </joint>
+
+
+
+  <link
+    name="RoueArriereD_Link">
+    <inertial>
+      <origin
+        xyz="4.1252E-09 -1.817E-08 -0.007373"
+        rpy="0 0 0" />
+      <mass
+        value="0.16695" />
+      <inertia
+        ixx="6.7293E-05"
+        ixy="-5.6591E-10"
+        ixz="-7.0713E-13"
+        iyy="6.7296E-05"
+        iyz="3.1286E-12"
+        izz="0.00011321" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueArriereD_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueArriereD_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint
+    name="RoueArriereD_Joint"
+    type="continuous">
+    <origin
+      xyz="-0.12936 0.028097 0.0688"
+      rpy="3.1416 1.5708 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="RoueArriereD_Link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      effort="10"
+      velocity="1000" />
+    <dynamics
+      damping="0.1"
+      friction="0.1" />
+    <safety_controller
+      k_position="10"
+      k_velocity="10" />
+  </joint>
+
+
+
+  <link
+    name="RoueArriereG_Link">
+    <inertial>
+      <origin
+        xyz="1.5172E-09 1.8571E-08 -0.007373"
+        rpy="0 0 0" />
+      <mass
+        value="0.16695" />
+      <inertia
+        ixx="6.7293E-05"
+        ixy="5.5456E-10"
+        ixz="-2.6422E-13"
+        iyy="6.7296E-05"
+        iyz="-3.1966E-12"
+        izz="0.00011321" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueArriereG_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/RoueArriereG_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint
+    name="RoueArriereG_Joint"
+    type="continuous">
+    <origin
+      xyz="0.10464 0.028097 0.0688"
+      rpy="0 1.5708 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="RoueArriereG_Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      effort="10"
+      velocity="1000" />
+    <dynamics
+      damping="0.1"
+      friction="0.1" />
+    <safety_controller
+      k_position="10"
+      k_velocity="10" />
+  </joint>
+
+
+
+  <link
+    name="UltrasonicSensor_Link">
+    <inertial>
+      <origin
+        xyz="-0.0027649 -0.00029172 0.023765"
+        rpy="0 0 0" />
+      <mass
+        value="0.0064163" />
+      <inertia
+        ixx="7.4924E-07"
+        ixy="-1.3067E-08"
+        ixz="-1.0584E-10"
+        iyy="3.4235E-07"
+        iyz="5.116E-12"
+        izz="5.6077E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/UltrasonicSensor_Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Assemblage_BaseNonHolonome_ros/meshes/UltrasonicSensor_Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  
+  <joint
+    name="UltrasonicSensor_Joint"
+    type="revolute">
+    <origin
+      xyz="-0.011256 -0.023653 -0.1123"
+      rpy="1.5708 -1.5708 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="UltrasonicSensor_Link" />
+    <axis
+      xyz="0 0 1" />
+    <dynamics
+      damping="0.1"
+      friction="0.1" />
+    <safety_controller
+      k_position="10"
+      k_velocity="10" />
+  </joint>
+</robot>

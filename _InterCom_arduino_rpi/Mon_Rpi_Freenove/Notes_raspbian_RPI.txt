@@ -1,0 +1,60 @@
+############### CREDENTIALS : MON RPI-RASPBIAN
+-
+Nom de l'ordi: raspberrypi
+Nom utilisateur:pc
+MDP:raspberry
+##
+VNC SERVER INSTALLATION:
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-20-04
+##
+SSH installé simplement depuis chatgpt
+
+### AVEC La micro sd 1, contenant raspbian j'avais configuré 'ssh' depuis 'raspbi imager'
+###########################
+
+
+
+##############################
+https://www.raspberrypi-france.fr/comment-utiliser-les-port-gpio-raspberry-pi/
+
+
+
+##############################
+Pour mettre en ligne un dossier appelé my_ws depuis votre Raspberry Pi sur GitHub, vous pouvez suivre ces étapes :
+
+Créer un nouveau référentiel sur GitHub : Tout d'abord, connectez-vous à votre compte GitHub et créez un nouveau référentiel appelé my_ws. Vous pouvez le faire en cliquant sur le bouton "New" sur la page d'accueil de GitHub.
+
+Initialiser un référentiel Git dans le dossier my_ws : Sur votre Raspberry Pi, accédez au dossier my_ws à l'aide de la ligne de commande. Ensuite, initialisez un nouveau référentiel Git en exécutant la commande suivante :
+
+bash
+Copy code
+cd chemin_vers_my_ws
+>>git init
+Ajouter les fichiers au référentiel Git : Ajoutez les fichiers que vous souhaitez mettre en ligne à votre référentiel Git en utilisant la commande git add. Par exemple, si vous avez des fichiers existants dans my_ws, vous pouvez les ajouter avec la commande suivante :
+
+bash
+Copy code
+>>git add .
+Effectuer un premier commit : Une fois que vous avez ajouté les fichiers, vous pouvez les valider en effectuant un commit avec la commande suivante :
+
+** PUIS...:
+>>git config --global user.email "my_email0@gmail.com"
+>>git config --global user.name "my_id_github"
+**
+
+bash
+Copy code
+>>git commit -m "Premier commit"
+Ajouter l'URL du référentiel distant : Ajoutez l'URL du référentiel GitHub comme référentiel distant en utilisant la commande suivante. Assurez-vous de remplacer nom_utilisateur par votre nom d'utilisateur GitHub :
+
+bash
+Copy code
+git remote add origin https://github.com/nom_utilisateur/my_ws.git
+Pousser les fichiers vers GitHub : Enfin, poussez vos fichiers vers GitHub en utilisant la commande git push. Vous devrez peut-être spécifier la branche principale, par exemple main ou master, en fonction de la configuration de votre référentiel :
+
+bash
+Copy code
+git push -u origin main
+Si vous utilisez une branche différente, remplacez main par le nom de votre branche.
+
+Une fois ces étapes terminées, votre dossier my_ws et son contenu seront mis en ligne sur GitHub dans votre référentiel my_git. Vous pouvez maintenant gérer votre code à partir de votre Raspberry Pi et le synchroniser avec GitHub lorsque vous le souhaitez en utilisant les commandes Git.

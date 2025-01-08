@@ -1,0 +1,42 @@
+<sdf version="1.7">
+	<world name="test_world">
+		<!-- <gravity>0 0 0.5</gravity> -->
+
+		<plugin
+			filename="ignition-gazebo-physics-system"
+			name="ignition::gazebo::systems::Physics">
+		</plugin>
+		<plugin
+			filename="ignition-gazebo-sensors-system"
+			name="ignition::gazebo::systems::Sensors">
+		<render_engine>ogre</render_engine>
+		</plugin>
+		<plugin
+			filename="ignition-gazebo-user-commands-system"
+			name="ignition::gazebo::systems::UserCommands">
+		</plugin>
+		<plugin
+			filename="ignition-gazebo-scene-broadcaster-system"
+			name="ignition::gazebo::systems::SceneBroadcaster">
+		</plugin>
+
+	
+
+		<include>
+			<uri>
+			https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun
+			</uri>
+		</include>
+
+
+		<include>
+			<uri>ground_plane</uri>
+		</include>
+
+        <include>
+            <pose>0 0 0.5 0 0 0</pose>
+            <uri>wheeled_model</uri>
+        </include>
+
+	</world>
+</sdf>

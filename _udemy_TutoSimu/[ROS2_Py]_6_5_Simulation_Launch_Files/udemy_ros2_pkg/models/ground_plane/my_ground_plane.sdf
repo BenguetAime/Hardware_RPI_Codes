@@ -1,0 +1,30 @@
+<sdf version="1.7">
+    <model name="ground_plane">
+        <static>true</static>
+        <link name="link_ground">
+            <visual name="visual_ground">
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>25 25</size>
+                    </plane>
+                </geometry>
+                <material>
+                    <ambient>0 1 1 1</ambient>
+                    <diffuse>0 1 1 1</diffuse>
+                    <specular>0 1 1 1</specular>
+                </material>
+            
+            </visual>
+            <collision name="collision_ground">
+                <geometry>
+                    <plane>
+                        <normal>0 0 1</normal>
+                        <size>25 25</size>
+                    </plane>
+                </geometry>
+            </collision>
+    
+        </link>
+    </model>
+</sdf>

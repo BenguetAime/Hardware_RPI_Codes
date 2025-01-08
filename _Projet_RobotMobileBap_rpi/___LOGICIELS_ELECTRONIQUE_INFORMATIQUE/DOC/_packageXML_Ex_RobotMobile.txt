@@ -1,0 +1,109 @@
+########################
+<?xml version="1.0"?>
+<package format="3">
+  <name>robot_autonome</name>
+  <version>0.1.0</version>
+  <description>Un projet de robot mobile autonome intelligent pour ROS 2</description>
+  <maintainer email="mainteneur@example.com">Nom du Mainteneur</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- Dépendances de build (compilation et tests) -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <!-- Dépendances d'exécution et de compilation (build_depend + exec_depend) -->
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>rclpy</depend>
+  
+  <!-- Systèmes de tests (optionnel) -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <!-- Support pour les scripts Python -->
+  <exec_depend>python3</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+
+################################
+>>
+<name> : Le nom du package, ici robot_autonome.
+<version> : Version du package.
+<description> : Une brève description du package.
+<maintainer> : Informations sur le mainteneur du package (son nom et son email).
+<license> : La licence sous laquelle le code est publié (ex. Apache 2.0).
+<buildtool_depend> : Spécifie que le package utilise ament_cmake comme outil de construction.
+<depend> : Liste des dépendances principales de ROS 2, incluant rclcpp (C++), rclpy (Python), et d'autres bibliothèques comme std_msgs, sensor_msgs, etc.
+<exec_depend> : Spécifie des dépendances nécessaires à l'exécution du projet, comme python3 pour les nœuds Python.
+<export> : Spécifie que ament_cmake est utilisé pour gérer le processus de build de ce package.
+
+
+
+################################ ARBORESCENCE DU PROJET
+robot_autonome/
+│
+├── CMakeLists.txt               # Fichier CMake pour la configuration de la construction
+├── package.xml                  # Fichier XML décrivant le package et ses dépendances
+├── src/
+│   └── robot_controller.cpp     # Node C++ pour le contrôle du robot
+│
+├── scripts/
+│   ├── perception_node.py       # Node Python pour la perception
+│   └── decision_making_node.py  # Node Python pour la prise de décision autonome
+│
+├── launch/
+│   └── robot_launch.py          # Fichier de lancement ROS 2 pour démarrer les nodes
+│
+└── config/
+    └── robot_params.yaml        # Fichier de configuration pour les paramètres du robot
+
+
+################################  Exemple de fichier de lancement ROS 2 (launch/robot_launch.py
+____
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        # Noeud C++ pour le contrôle du robot
+        Node(
+            package='robot_autonome',
+            executable='robot_controller',
+            name='robot_controller',
+            output='screen'
+        ),
+        # Noeud Python pour la perception (gestion des capteurs)
+        Node(
+            package='robot_autonome',
+            executable='perception_node.py',
+            name='perception_node',
+            output='screen'
+        ),
+        # Noeud Python pour la prise de décision
+        Node(
+            package='robot_autonome',
+            executable='decision_making_node.py',
+            name='decision_making_node',
+            output='screen'
+        ),
+
+############################ Exemple de fichier YAML de configuration (config/robot_params.yaml
+_______
+robot_controller:
+  max_speed: 1.5  # Maximum speed in m/s
+  min_speed: 0.1  # Minimum speed in m/s
+  pid_gains:
+    kp: 1.0
+    ki: 0.01
+    kd: 0.05
+  sensor_thresholds:
+    lidar_min_range: 0.2
+    lidar_max_range: 10.0
+    ])

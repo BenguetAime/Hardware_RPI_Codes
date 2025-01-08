@@ -1,0 +1,51 @@
+############################## "ARTICULATED ROBOTS"  -  CONSTRUIRE UN ROBOT MOBILE
+_ intro
+https://www.youtube.com/watch?v=OWeLUSzxMsw&list=PLunhqkrRNRhYAffV8JDiFOatQXuU-NnxT
+
+
+
+
+
+##############################  "SolidWorks to Urdf"
+_ SolidWorks to Urdf plugin : The SolidWorks to URDF exporter is a SolidWorks add-in that allows for the convenient export of SW Parts and Assemblies into a URDF file
+_
+https://www.youtube.com/watch?v=4kDfsxpwKmw&t=16s
+_
+ https://github.com/ros/solidworks_urdf_exporter/releases
+
+
+____ UTILISER SOLIDWORKS TO URDF PLUGIN : exemple voiture...
+https://www.youtube.
+
+1 - Placer les repères où il y les articulations :  kes repères sont les repères de références des "JOINTS" pas les repères qui sont sur les éléments mobiles : mais les repères par rapport auxquels les corps se déplacent.
+*** EXEMPLES : pour le robot bipède, dans l'interface de configuration URDF (OUTILS/tools/export to urdf) Mes liens sont 
+nommés par exemple "Link_HipPitch_D": il s'agit du bloc qui effectue le mouvement du PITCH au niveau du HIP Droit.
+"Link_Knee_D": il s'agit du bloc qui effectue le mouvement du Pitch au niveau du Knee Droit.
+2 - Placer les axes par rapport auxquels se font les mvts
+
+
+3 - Faire : Outils/tools(tout en bas)/Export to urdf : "base link" doit être fait des parties fixes;
+"Entrer le nombre d'enfants où il y a "0"; Renommer les "enfants"; 
+- Compléter
+4- "Preview and export : Rentrer des paramètres de config pour les LINK
+5- Enregister/Exporter vers URDF & MESHES et ENREGISTRER LE DOC "SANS l'EXTENSION .SLDASM" / Puis aller ouvrir le DOC, le fichier URDF est dispo, on peut l'ouvrir avec notepad par EX.
+
+6- (Optional) : https://discourse.ros.org/t/web-based-urdf-visualization-tool-and-library-opensourced-from-nasa-jpl/14404 
+
+
+____________
+POUR PREVISUALISER LE RENDU 3D urdf. et voir si tout est ok !
+-> Aller cliquer sur le paragraphe "Web Based URDF Viewer" / "here" ; Puis aller récupérer le dossier contenant le urdf et glisser sur l'interface WEB BASED URDF VISUALISATION.
+_____________
+
+
+
+
+##############################  "ROS"
+____ ROS Github :
+https://github.com/ros2
+
+____ ROS 2 DOC :
+https://docs.ros.org/en/humble/
+
+com/watch?v=H6YPkXmkdPg

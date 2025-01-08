@@ -1,0 +1,526 @@
+############### CREDENTIALS : MON RPI-UBUNTU
+-
+Nom de l'ordi: princeB
+Nom utilisateur: ubuntu
+MDP:*Aimemael2017
+_____
+>> adresse ip - toulon : 192.168.1.179
+>> adresse ip VMWARE (2024, my Acer) - toulon : 192.168.1.124
+
+_____
+##
+VNC SERVER INSTALLATION:
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-20-04
+## POUR PLUS DE DETAILS SUR SSH: voir mon fichier NOTES créé en stage 2A.
+SSH installé simplement depuis chatgpt:
+ssh nomUtilisateur@nomDeLordi
+
+### AVEC La micro sd 1, contenant raspbian j'avais configuré 'ssh' depuis 'raspbi imager'
+###########################
+>> ssh :
+https://www.youtube.com/watch?v=Wlmne44M6fQ
+>> IP ADRESS: >> hostname -I
+
+
+
+########################## RPI, DEFAUT DETECTES, etc
+>> free -h : mémoire
+-
+---------
+>> Alternative à "sudo raspi-config", sous ubuntu:
+- Faire premièrement :
+sudo apt-get install raspi-config
+sudo raspi-conig ; LANCER L'interface graphique
+
+- Fichier config :
+sudo nano /boot/firmware/config.txt
+
+
+---------
+>> vcgencmd get_throttled : 
+voir si le RPI est sous tension!
+0x0 : est attendu pour que tout soit ok
+--
+Rôle de vcgencmd get_throttled
+Détection des conditions anormales :
+
+Vérifie si le Raspberry Pi a subi une limitation des performances (throttling) en raison de :
+Une température trop élevée.
+Une alimentation insuffisante.
+
+---
+La sortie est une valeur hexadécimale qui représente différents états. Exemple :
+>>throttled=0x50005
+
+---
+Bit position	État	Description
+Bit 0	Under-voltage	L'alimentation est insuffisante.
+Bit 1	Arm frequency capped	La fréquence du CPU a été réduite pour éviter la surchauffe.
+Bit 2	Currently throttled	Le CPU est actuellement limité à cause d'une surchauffe ou d'une sous-tension.
+Bit 3	Soft temperature limit	La température a dépassé une limite logicielle et le CPU fonctionne à une fréquence inférieure pour éviter les dommages.
+Bit 16	Under-voltage has occurred	Une condition de sous-tension s'est produite dans le passé.
+Bit 17	Arm frequency capped has occurred	Une limitation de fréquence CPU s'est produite dans le passé.
+Bit 18	Throttling has occurred	Le CPU a été limité dans le passé en raison de la température ou d'une sous-tension.
+Bit 19	Soft temperature limit occurred	Une condition de température logicielle a été atteinte dans le passé.
+
+
+***Exemple d'analyse
+***Sortie : throttled=0x50005
+--> 0x50005 signifie en binaire : 0101 0000 0000 0000 0101.
+Analyse :
+Bit 0 : Sous-tension actuelle.
+Bit 2 : Le CPU est actuellement limité.
+Bit 16 : Sous-tension détectée dans le passé.
+Bit 18 : Throttling détecté dans le passé.
+##########################
+
+
+
+########################## GitHub :
+__
+sudo apt update
+sudo apt install git
+*
+git config --global user.name "Votre Nom"
+git config --global user.email "votre_email@example.com"
+
+
+__
+>> git clone https://github.com/BenguetAime/Hardware_rpi
+>> git add .
+>> git pull origin main : récupérer les modifs faite sur GitHub
+>> git pull --no-rebase origin main : j'y ai eu recours après avoir modifié un fichier sur github
+
+>> git push origin main : envoyer vers github
+
+___________________________________
+>> GITHUB PUSH:
+https://raspberrypi.stackexchange.com/questions/133163/how-do-i-configure-my-computer-to-push-to-github
+
+- *** video : Personal Access token 
+https://www.youtube.com/watch?v=iLrywUfs7yU
+
+-*** error:
+https://stackoverflow.com/questions/24114676/git-error-failed-to-push-some-refs-to-remote
+_______
+>> access token :
+https://github.com/settings/personal-access-tokens/new
+
+https://github.com/settings/personal-access-tokens/4413540
+
+-- my_token24_2 :
+https://github.com/settings/tokens?type=beta
+
+_______
+>>
+Since GitHub removed password-based authentication for Git operations over HTTPS in August 2021, you’ll need to use a personal access token (PAT) or SSH keys instead of your GitHub password.
+
+Here’s how to solve this issue:
+******************************
+Option 1: Use a Personal Access Token (PAT)
+-Generate a Personal Access Token:
+
+-Go to GitHub’s Personal Access Token settings.
+-Click on Generate new token.
+-Select the necessary scopes for your token (for most users, selecting repo should be sufficient for repository access).
+-Copy the token to a safe place (you won’t be able to see it again once you leave the page).
+
+*Use the Token Instead of Your Password:
+-When prompted for a password, enter your personal access token instead.
+Alternatively, you can update your remote URL to include the token directly (use caution with this approach, as it saves the token in plain text).
+
+------------->> KEY :
+- token name: my_token24
+- token :
+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
+------------->> KEY :
+
+
+_______________________________ EXEMPLE :
+>> 
+***Step 2: Update the Git Remote on Your Raspberry Pi
+-Open a terminal on your Raspberry Pi.
+-Navigate to your repository:
+cd /path/to/your/repository
+
+1---
+Update the Git remote URL to include your username and token:
+git remote set-url origin https://<your-username>:<your-token>@github.com/<your-username>/<your-repo>.git
+
+-For example:
+git remote set-url origin https://denguetAime:ghp_YourGeneratedToken@github.com/denguetAime/Hardware_rpi.git
+
+Note: Replace <your-username>, <your-token>, and <your-repo> with your GitHub username, the token you generated, and the repository name respectively.
+
+2---
+(Optional) Store the credentials using Git’s credential helper:
+git config --global credential.helper store
+
+Then, the next time you’re prompted for the token, Git will save it so you don’t have to enter it again.
+
+
+***Step 3: Push Changes
+Once your remote is updated, you can push as usual:
+
+git add .
+git commit -m "Your commit message"
+git push origin main
+
+Your Raspberry Pi will use the PAT instead of a password, allowing you to push successfully.
+
+__________________ Mon test:
+>> 1 :
+ubuntu@princeB:~/Documents/_FromGithub/Hardware_rpi$ git remote set-url origin https://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@github.com/BenguetAime/Hardware_rpi.git 
+
+>> 2 :
+git config --global credential.helper store
+
+>> 3 :
+git add .
+git commit -m "Your commit message"
+git push origin main
+
+__________________ COMMENTS
+----
+ubuntu@princeB:~/Documents/_FromGithub/Hardware_rpi$ git pull origin main
+remote: Enumerating objects: 20, done.
+remote: Counting objects: 100% (20/20), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 20 (delta 12), reused 20 (delta 12), pack-reused 0 (from 0)
+Unpacking objects: 100% (20/20), 1.13 MiB | 2.58 MiB/s, done.
+From https://github.com/BenguetAime/Hardware_rpi
+ * branch            main       -> FETCH_HEAD
+   de4e2c0..ce7ecfb  main       -> origin/main
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+
+
+
+-----
+Choisissez quelles modifications conserver :
+
+Vous pouvez soit :
+Conserver votre version locale (ce qui écrasera la version distante)
+Conserver la version distante (en supprimant la vôtre)
+Fusionner manuellement les deux versions, en combinant les changements souhaités.
+Sauvegardez le fichier après avoir fait les modifications nécessaires pour résoudre le conflit.
+
+Ajoutez le fichier résolu en indiquant à Git que le conflit a été résolu :
+
+bash
+Copier le code
+git add COPIES_EN_COURS.txt
+Continuez le rebase avec la commande suivante :
+
+bash
+Copier le code
+git rebase --continue
+Si tout se passe bien, Git terminera le rebase. S'il y a d'autres conflits, répétez les étapes ci-dessus.
+
+Poussez vos modifications une fois le rebase terminé. Assurez-vous d’avoir accès au dépôt distant avec les bonnes permissions.
+
+bash
+Copier le code
+git push origin main
+
+
+--------
+Autres options
+Si les conflits sont trop nombreux ou complexes, vous pouvez annuler le rebase et revenir à l'état initial en utilisant :
+
+bash
+Copier le code
+git rebase --abort
+Si vous préférez ignorer ce commit en conflit, utilisez :
+
+bash
+Copier le code
+git rebase --skip
+
+---------
+
+
+
+__________________
+########################## GitHub :
+
+
+
+
+
+
+
+
+
+
+
+
+Ubuntu 22.04 LTS Desktop 
+############### OS
+-
+(ubuntu 22.04 LTS Server ne donne pas l'interface graphique?)
+-
+LIEN TELECHARGEMENT: https://roboticsbackend.com/install-ros2-on-raspberry-pi/#Install_ROS2_on_Ubuntu_on_Raspberry_Pi_4
+
+
+-
+De plus, comme nous allons installer ROS2 Humble, assurez-vous d'avoir la version 22.04 pour Ubuntu, puisque chaque version de ROS2 n'est compatible qu'avec une seule version d'Ubuntu.
+
+-
+https://docs.ros.org/en/humble/Installation.html
+
+
+
+
+############################ OS - carte microsd 128GB
+-->> https://www.raspberrypi.com/software/ : rpi imger
+-->>https://releases.ubuntu.com/22.04/?_gl=1*yye7hm*_gcl_au*NDExMTczNzY2LjE3MTY5MTk2OTA.&_ga=2.23343167.449980557.1716919908-302634684.1716919908
+
+
+
+
+
+###############      SSH
+ssh ubuntu@ipaddress
+-
+ssh ubuntu@10.192.4.38
+>> adresse ip - toulon : 192.168.1.179
+
+
+###############      VNC
+Name: NomDeLordi(princeB)
+Vnc server: 10.192.4.38
+>> adresse ip - toulon : 192.168.1.179
+
+
+########################################### !!!!!!!!!
+Great, ROS2 Humble is now installed on your Raspberry Pi 4 with Ubuntu Server 22.04!
+
+Now, in order to actually use ROS2, you’ll need to setup your environment every time you open a new session (terminal). To source your ROS2 installation in your environment, run source /opt/ros/humble/setup.bash.
+
+And because it won’t be that practical to do this for every new session you open, add this line to your bashrc.
+
+_______
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+So, from now on, every time you open a terminal, your bashrc will be executed and your environment will be ready for
+ROS2.
+###########################################
+
+
+
+###########################################
+_ Arduino :
+>> Prendre la version (Arduino 1.8 truc du genre) marqué LINUX ARM 64 bits
+
+
+
+#############" DEMARRER UN CODE ROS :
+>> En ouvrant le pc, commencer par "colcon build --symlink-install" puis "source install/setup.bash
+
+
+
+
+
+###########################################  SIMULATIONS
+____rviz2 :
+>> télécharger sur le site :
+https://docs.ros.org/en/humble/Tutorials/Intermediate/RViz/RViz-User-Guide/RViz-User-Guide.html
+
+____ ignition gazebo : computer/usr/share/ignition ;; ROS : computer/opt/ros/humble
+>> ign gazebo : lancer gazebo
+>> ign topic -l : liste des topic
+>> SI "ros2" n'est pas reconnu, tester: 
+>>source /opt/ros/humble/setup.bash car ros se trouve dans le repertoire indiqué (accessible UBUNTU depuis "dossier/other location/opt/ros/humble ")
+
+>> https://docs.ros.org/en/humble/Tutorials/Advanced/Simulators/Gazebo/Gazebo.html
+>> https://www.udemy.com/course/ros2-robotics-developer-course-using-ros2-in-python/learn/lecture/24533376#overview
+>>
+__sudo apt install ros-$ROS_DISTRO-ros-ign 
+__ign gazebo -v 4 -r --render-engine ogre visualize_lidar.sdf
+__ign gazebo nomDuFichier.sdf (en général si on est dans le dossier de type "world", inclus dans notre package)
+__ign topic -l
+__sudo apt install ros-$ROS_DISTRO-ros-ign-bridge : nous permet de faire un pont entre les messages ros2 et gazebo.
+___ros2 run ros_gz_bridge parameter_bridge
+- Pour éviter de ...
+>> >> export IGN-GAZEBO-RESOURCE-PATH=home/ray/etc chemin où se trouve les fichiers qu'on souhaite ouvrir n'importe où!?? PUIS aller dans "le fichire "world.sdf" ET dans la balise <uri> appelant le doosier "models", garder uniquement le nom du dossier contenant le modèle qu'on import
+
+____ignition doesn't have a build-in monitore : so we use gazebo classic
+-
+https://classic.gazebosim.org/tutorials?tut=install_ubuntu&cat=install
+-
+
+>> gazebo : pour demarrer gazebo classic
+
+>>fILE/eDIT/mODEL EDITOR pour créer/modifier un modèle
+>>file exit modèle editor pour retourner en simulation
+>> SUR GAZBO CLASSIC : pour tester les joints, tirer sur le coté droit (rétrécir l'environnement de simulation) puis toucher le modèle 3D
+
+____ MODELES ET MONDE :
+>> Dans le package,
+- Créer un dossier "Models" et un dossier "Worlds". 
+- Dans "Models" créer un dossier "Ground_plane" (y ajouter un modèle de type groun_plane nommé "my_ground_plane.sdf" ET le fichier model.config qui "pointe" vers my_ground_plane.sdf). On peut ajouter plusieurs AUTRES DOSSIER dans le dossier "Models", lesquels autres fichiers représentant différents modèles (1 fichier de modèle = 1 fichiers model_i.sdf et 1 fichier modelConfigName_i.config).
+- Dans le dossier "Worlds" on créer un fichier "my_World.sdf" dans lequel on inclus via des balise "<uri>" le dossier "Models" dans lequel il y a nos différents modèles; ET c'est CE FICHIER "my_World.sdf" qui sera lancé;
+
+
+_________ !!!!! VOIR AUSSI SIMULATION "ignition" dans la doc
+>> ign gazebo --render-engine ogre nomDeFichier.sdf  : si problème d'affichage
+>> To be able to communicate our simulation with ROS 2 you need to use a package called ros_ign_bridge :
+source /opt/ros/foxy/setup.bash
+ros2 run ros_ign_bridge parameter_bridge /model/vehicle_blue/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist
+>> ros2 topic list
+>> ros2 topic echo /laser_scan
+>> ros2 topic pub etc... pour publier 
+
+>> ros2 launch my_pkg nomDeFichier.launch.py
+>> ign topic --info --topic /camera : affiche le type de données sur ce topic de ign gazebo, en cours?
+
+
+_______ !!!!! DEPUIS IGNITION GAZEBO, ON PEUT "piloter" notre robot comme suit :
+1/ en utilisant ros_ign_bridge et les commandes qui vont avec Afin de publier depuis ROS2 des commandes pour le modèles se trouvant dans gazebo
+2/ en utisant "rqt" et en publiant sur un topic donnée la commande : OUVRIR RQT/ PLUGIN/ TOPIC/ Message Publisher - Puis "CLIQUER" sur le "+" en haut à droite "ADD A NEW PUBLISHER" et fixer des valeurs à publier.
+
+SINON le modèle reste figé!!
+
+>> SE SOUVENIR DES EXEMPLES DE REMPARRING DE TOPIC : exemple vidéos sur "PROJECT: ROS2 SIMULATION ROBOT - minutes: 14.50"
+
+
+
+_______!!!! attention aux plugins et TAG
+- SENSOR TAG pour la caméra 
+- JOINT POSITION CONTROLLER.sdf (voir fin du fichier surtout; le dernier plugin ) plugin, dans ignition gazebo computer/usr/igntion…
+
+
+
+
+
+
+
+
+
+############################# USING URDF #############################
+>>https://www.udemy.com/course/ros2-robotics-developer-course-using-ros2-in-python/learn/lecture/26054056#overview
+>>ros2/humble/...URDF
+>>https://aleksandarhaber.com
+
+
+
+
+
+
+
+
+###############################  ENVIRONNEMENT MARINS
+>> https://gazebosim.org/api/gazebo/6.1/underwater_vehicles.html  : IGITION
+>> https://gazebosim.org/docs/harmonic/migrating_gazebo_classic_ros2_packages
+---
+---
+>> >> https://app.gazebosim.org/goztas/fuel/models/goztas_AUV
+
+>> https://classic.gazebosim.org/tutorials?tut=hydrodynamics&cat=physics
+
+>> https://gazebosim.org/projects/maritime
+
+>> boat floating : code source a la fin...
+https://discuss.ardupilot.org/t/ship-landing-ignition-simulation/80663/25?page=2
+
+>> https://github.com/srmainwaring/asv_wave_sim?tab=readme-ov-file !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+>> rov2: https://github.com/clydemcqueen/bluerov2_ignition/blob/main/models/bluerov2/model.sdf
+
+
+
+
+
+################################## 01/06/2024   - URDF 		ROS2 	GAZEBO
+----- URDF-ROS2-GAZEBO : dans un pkg contenu le dossier DOSSIER créer des dossier URDF,LAUNCH,RVIZ (saved from a gazeo? rviz?)
+
+------- URDF : 
+- >> https://docs.ros.org/en/foxy/Tutorials/Intermediate/URDF/Building-a-Visual-Robot-Model-with-URDF-from-Scratch.html
+
+- !!!!!!!!! >> ros2 launch urdf_tutorial display.launch.py model:=urdf/01-myfirst.urdf
+### 1er.lien important(notamment le fichier display.launch.py et s'y inspirer aussi pour créer le fichier gazebo.launch.py (rajouter uniquement spaw_entity=… et dans return launch.LaunchDescription rajouter ce qui concerne gazebo); voir aussi le complément à mettre dans package.xml) - !!!! CE QUIL MET DANS LE "package.xml" pour lancer son fichier launch etc :
+
+!!!!!!!!!!!!   !!!!!!!!!!!!!!! https://aleksandarhaber.com/how-to-create-urdf-and-launch-files-in-ros2-and-display-them-in-rviz/
+
+
+------- URDF : DANS LEs FICHIERs LAUNCH on a besoin de joint state publisher etc, il faut les installer :
+__
+sudo apt update
+sudo apt install ros-humble-joint-state-publisher ros-humble-joint-state-publisher-gui ros-humble-robot-state-publisher ros-humble-rviz2
+
+
+
+-------- URDF :
+>> ros2 humble doc : TUTO/INTERMEDIATE/LAUNCH -- voir ce qui est dit, notamment l'ajout de << <exec_depend… roslaunch etc >>
+
+##2me lien.important(fichier gazebo.launch: on a une idée; )-------- GAZEBO.launch file : prendre le fichier de config du net "urdf:
+ROS2 robot URDF + Xacro creation, visualize in RVIZ2 and Gazebo + Teleoperation | Beginner Tutorial
+!!!!!!!!!!!!!!! !!!!!!!!!!!!! >> https://www.youtube.com/watch?v=Vbh3--etiwg&t=1782s (EN DESCRIPTION)
+
+
+-------- TF2 : installer tf2
+>> ros2 run tf2_tools view_frames : visualiser les repères (un fichier est créé dans le WS)
+
+
+-------- GAZEBO : 
+>> ajouter des lignes dans "package.xml" (depend … gazebo_ros  ET AUSSI ros_ign_gazebo; rclcpp; rclpy)
+>> ajouter des lignes dans cmakelist : find_package(les mêmes que ceux rajoutés dans package.xml)
+>> dans le fichier .urdf : enlever encoding "utf-8" qui est sur la 1re ligne??? pas nécessairement
+
+
+------------------- SPAWN URDF INTO GAZEBO ROS2 - THE CONSTRUCT :
+!!!!!!! (VOIR GESTION DES CHEMINS DE "models" qui seront lus par gazebo)
+>> https://www.google.com/search?q=Cannot+Spawn+URDF+into+gazebo+using+ros2+edit%0D%0A&sca_esv=bb932b014846ff27&sxsrf=ADLYWIJ3pFYUjmbdQ66xzaiKUnALo7CLSw%3A1717358563276&ei=489cZtPEEKqYkdUPmb-I8As&ved=0ahUKEwiTwvaY272GAxUqTKQEHZkfAr4Q4dUDCBA&uact=5&oq=Cannot+Spawn+URDF+into+gazebo+using+ros2+edit%0D%0A&gs_lp=Egxnd3Mtd2l6LXNlcnAiLkNhbm5vdCBTcGF3biBVUkRGIGludG8gZ2F6ZWJvIHVzaW5nIHJvczIgZWRpdAoyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyBxAjGCcY6gIyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAuGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQEyFhAAGAMYtAIY5QIY6gIYjAMYjwHYAQFIpmxQxmdYxmdwAngBkAEAmAEAoAEAqgEAuAEDyAEA-AEB-AECmAICoAIbqAIUwgIKEAAYsAMY1gQYR5gDFIgGAZAGAroGBggBEAEYC5IHATKgBwA&sclient=gws-wiz-serp#fpstate=ive&vld=cid:06b66cc4,vid:mDS_M95MQGA,st:3071
+
+
+--- ERRRRRRREUR
+>>https://answers.gazebosim.org//question/26073/cannot-spawn-urdf-into-gazebo-using-ros2/
+
+
+
+
+
+################################  07/06/2024
+*** SI IL Y A UN PB "plusieurs server running ou un truc du genre" :
+>> ps aux | grep gzserer (voir le 1r uméro à 5 chiffres ("PID") et faire : 
+>> kill -9 "numéro pid à 5chiffres"
+ou
+>> kill all
+
+__________ URDF IN GAZEBO :
+>> https://classic.gazebosim.org/tutorials/?tut=ros_urdf
+
+>> https://github.com/gazebosim/gazebo-classic/blob/master/media/materials/scripts/gazebo.material
+
+>> TURTLE BOT - URDF - LAUNCH :
+https://github.com/ROBOTIS-GIT/turtlebot3_simulations/blob/d16cdbe7ecd601ccad48f87f77b6d89079ec5ac1/turtlebot3_gazebo/urdf/turtlebot3_burger.urdf
+
+___________ conversion urdf/sdf
+>> gz sdf -p path/vers/monFichiet_urdf > path/vers/le nouveau/monFichier.sdf
+>> RAJOUTER LA BALISE <? xml version='1.0'> au début
+
+___________urdf/xacro ; urdf/sdf
+
+
+
+################################## 10/06/2024
+
+__ environnement marin GitHub/srmainwaring
+>> colcon build… : supprimer merge install?
+>> installer gz-cmake 3 ?
+
+
+################################### 12/06/2024
+>> ignition gazebo : launch, create.launch /// comment remplacer 'spawn_entity.py' utilisé avec ros_gazebo
+https://github.com/gazebosim/ros_gz/blob/melodic/ros_ign_gazebo_demos/launch/create.launch#L14

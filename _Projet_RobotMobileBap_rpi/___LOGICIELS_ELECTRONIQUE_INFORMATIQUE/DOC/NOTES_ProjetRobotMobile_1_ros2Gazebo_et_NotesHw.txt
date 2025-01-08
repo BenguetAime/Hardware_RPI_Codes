@@ -1,0 +1,159 @@
+
+##############  22/10/2024  ##############
+>> Installation des exécutables (binaries):
+install(TARGETS my_node
+        DESTINATION lib/${PROJECT_NAME}) 
+si vous avez des nœuds ROS écrits en C++ 
+
+>> Installation des scripts Python
+install(PROGRAMS
+  scripts/my_python_script.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+>> Installation des fichiers de configuration ou de ressources
+install(DIRECTORY launch config
+        DESTINATION share/${PROJECT_NAME})
+
+>> Installation des bibliothèques :
+Si vous avez développé une bibliothèque dans votre package, vous devez spécifier où cette bibliothèque doit être installée.
+install(TARGETS my_library
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+##############  22/10/2024  ##############
+
+
+
+____
+>> adresse ip RaspberyPi - toulon : 192.168.1.179
+>> adresse ip VMWARE (2024, my Acer) - toulon : 192.168.1.124
+
+>> free -h : mémoire
+
+
+
+__________________ ROS 2 ROS 2  __________________
+>> ros2 launch my_pkg file.launch.py
+>> ros2 launch gazebo_ros gazebo.launch.py
+>> ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity myRobot
+_____ Si problème avec gazebo OU spawn_entity : en lien avec plusieurs instances gazebo :
+>> ps aux | grep gzserver
+>> killall gzserver
+
+ps aux : liste tous les processus actifs sur le système, avec des détails comme l'utilisateur, le pourcentage de mémoire et de CPU utilisés, et d'autres informations sur chaque processus.
+grep gzserver : filtre la liste des processus pour ne montrer que ceux qui contiennent le terme "gzserver".
+_____
+
+>> INSTALLER "xacro"?
+	sudo apt install ros-humble-xacro
+>>
+colcon build --packages-select my_package
+
+>> ros2 run tf2_tools view_frames : visualiser les repères (un fichier est créé dans le WS)
+
+>> ros2 param get /robot_state_publisher robot_description
+
+_________CmakeLists/Package.xml__________ :
+>>Pour un lancement basique (sans plugin particulier) du robot:
+- pas besoin de "joint_state_publisher" (n'existe pas comme dépendance); besoin de rien pour SPAWN DANS gazebo, rviz aussi !
+---------
+
+__dans un fichier launch :
+Les nœuds robot_state_publisher; joint_state_publisher ??
+
+!!!__ DANS RVIZ : en faisant "ADD/ ROBOT MODEL" : écrire dans l'interface "ROBOT MODEL/ Description Topic": /robot_description;
+
+____ RVIZ : FIXED FRAME:
+if the global fixed frame in Rviz is base link frame, all the generated data are referred to the base of robot,
+if the global fixed frame in Rviz is map frame, all the generated data are referred to the center of environment
+
+__________________ ROS 2 ROS 2  __________________
+
+
+
+
+
+########### GAZEBO CONTROL - start ###########
+____Quand on veut faire communiquer ROS et GAZEBO, c'est par des PLUGINS
+>> 
+Le plugin diff_drive interprète les commandes de vitesse venant du topic ROS spécifié (cmd_vel) pour calculer la vitesse de chaque roue (gauche et droite). Ensuite, il applique la force nécessaire aux joints associés (left_wheel_joint et right_wheel_joint) pour déplacer le robot dans Gazebo.
+
+En parallèle, le plugin publie également les données d’odométrie (odom), qui sont calculées en fonction de la rotation des roues et des paramètres de configuration. Ces données d’odométrie peuvent être utilisées pour localiser le robot dans l’espace.
+
+>> sudo apt update
+- sudo apt install ros-humble-gazebo-ros-pkgs
+- ls /opt/ros/humble/lib | grep diff_drive
+
+
+
+>> EXEMPLE :
+# Pour avancer le robot
+ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.5}, angular: {z: 0.0}}"
+
+# Pour faire tourner le robot
+ros2 topic pub /cmd_vel geometry_msgs/Twist "{linear: {x: 0.0}, angular: {z: 0.5}}"
+
+
+____!!!!!!____!!!! DIFF DRIVE : 2/4 WHEELS plugins ____!!!!!!____!!!!:
+>> AI, Deep Learning and Robotics :
+>> 
+https://robotics.snowcron.com/robotics_ros2/diff_drive_ros2_control_2_wheels.htm
+
+>> THE CONSTRUCT: diff_drive ros2
+https://www.theconstruct.ai/how-to-use-the-gazebo-differential-drive-plugin-in-ros-2/
+
+########### TELEOP KEYBOARD
+>> ros2 run teleop_twist_keyboard teleop_twist_keyboard : les commandes marchent ssi ON garde le résultat dans LA FENETRE ACTIVE!
+
+########### ODOM
+>> RVIZ: Tenter de mettre "odom" comme FIXED FRAME, si on a ajouté le PLUGIN diff_drive dans le modèle urdf.xacro du robot;
+
+>> ERREUR "no transform between "wheel_joint_left" etc:
+- https://robotics.stackexchange.com/questions/104632/no-transform-between-robot-wheels-and-odom-frame
+---------->>> SOLUTION : 
+le problème était que je lançais JOINT STATE PUBLISHER GUI dans rsp.launch.py : en utilisant "odom", le PLUGIN/Contrôleur utilisé comme driver pour Differential drive ne le tolère pas, disons! 
+
+########### GAZEBO CONTROL - end ###########
+
+
+
+########### HARDWARE - start ###########
+
+########### CIRCUITS/HARD
+- Articulated robotics : utilise UNE source d'énergie qui servira à tous les composants; d'où la nécessité de vérifier la tension, le courant, la puissance nécessaire… MOI: j'ai utilisé plusieurs source de courant, pour les différents systèmes !
+- Régulateur (linéaire, switching) : U-->u
+- Battérie : Lipo(notions de cellules)
+- WIRING/CONNECTEUR : Voir combien un câble peut supporter de COURANT; pour les connecteurs, lire les datasheets; EX:xt60 connector for 60A; breadbords and jumpers used for very low current in the milliamps
+- Raspberry Pi : a une limite sur combien de courant il peut laisser passer; si on veut plus, on peut utiliser un USB HUB externe pour laisser passer le courant souhaité!
+- Avoir un Power Switch pour le tout!
+- Utiliser un FUSIBLE : sur le circuit d'alimentation (sur le + de la battérie)! protège donc uniquement le câblage et la battérie!
+
+_____ NOTIONS :
+-- Avoir un Power Switch pour le tout!
+-- Utiliser un FUSIBLE / "Fusible à lame" : sur le circuit d'alimentation (sur le + de la battérie)! protège donc uniquement le câblage et la battérie!
+* Déterminer le courant nominal (ou courant de fonctionnement)
+* Connaître le type de charge (inductive, résistive, capacitive)
+Pourquoi : Les charges inductives, comme les moteurs, créent des pics de courant au démarrage. Les fusibles à réponse rapide risquent de se déclencher inutilement avec ce type de charge, alors qu’un fusible temporisé (ou « fuse delay ») peut absorber ces courtes pointes.
+* Choisir la tension nominale
+Pourquoi : La tension du fusible doit être égale ou supérieure à la tension du circuit pour éviter les arcs électriques en cas de court-circuit.
+
+-- Switch ; Borniers; Raccord électrique;
+-- Borniers
+
+-- Connecteur JST; XH; XT90; DC jack;
+-- xt60 connector: vers la battérie
+-- Cosse(fém.) : extrémité métallique de [qch]);
+*Les spade connectors (ou connecteurs à cosses plates en français) sont des connecteurs électriques utilisés pour effectuer des connexions rapides et sécurisées dans les circuits électriques. Ils sont appelés "spade" (en forme de pelle) en raison de leur forme plate, qui permet un branchement et un débranchement rapide.
+-- Screw terminal : borne à vis.
+-- Ferrules se traduit par "embouts de câblage"(internet) ou ferrules de câblage en français.
+Les embouts de câblage sont de petits manchons en métal, souvent entourés de plastique isolant, qui se fixent à l'extrémité des fils électriques multibrins.
+-- "Pince à dénuder"(outil est utilisé pour enlever l'isolant des fils sans endommager le conducteur); Cutter : Un outil de coupe général qui peut être utilisé pour sectionner des câbles; Pince à sertir ;
+-- Le sertissage : est une opération simple d'assemblage de deux pièces par déformation;  La déformation de l'une ou des deux parties de l'assemblage se fait sans écrasement de matière.
+-- Sonde : pour mesures!
+-- Bornier (terminal strip connector): pour Distribuer les 5v fourni par le régulateur à plusieurs composants;
+--Un connecteur RCY (ou RCY connector) est un type de connecteur électrique couramment utilisé pour établir des connexions dans les systèmes de radio-commandes et d'autres applications électriques. 
+--En électronique, un jack ou socket est une prise, et un plug est une fiche. 
+
+____
+########### HARDWARE - end ##########

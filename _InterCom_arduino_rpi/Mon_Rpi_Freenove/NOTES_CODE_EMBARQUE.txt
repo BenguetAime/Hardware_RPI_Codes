@@ -1,0 +1,98 @@
+#####
+- https://pinout.xyz/pinout/pcm: BCM GPIO Numbering
+
+#####
+Conf. code BLINK_1.C:
+
+#define  ledPin    0	//define the led pin number:dans la configuration WiringPi (Ex:0 ici est en configuration WiringPi <=> GPIO17 en BCM GPIO Numbering <=> Physical Pin Number 11)
+wiringPiSetup();	//Initialize wiringPi.
+pinMode(ledPin, OUTPUT);//Set the pin mode
+digitalWrite(ledPin, HIGH);  //Make GPIO output HIGH level
+delay(1000);(delay(millisec))
+
+# PWM:
+- PWM Matérielle:
+pinMode(ledPin, PWM_OUTPUT);
+pwmWrite(ledPin, duty_cycle);//de 0 à 1023
+
+- SOFT PWM:
+softPWM (BREATHING_LED_4):
+#include <softPwm.h>
+softPwmCreate(ledPin,  0, 100);//Create SoftPWM pin:softPwmCreate(int pin, int initialValue, int pwmRange);
+<=> variable_of_type_pwm=GPIO.PWM(ledpin, frequency);
+
+softPwmWrite(ledPin, i);0<=i<=100
+
+
+
+#####
+Conf. BUTTON LED_1.C
+
+pullUpDnControl(buttonPin, PUD_UP);  //Lorsque le bouton n'est pas enfoncé quel niveau logique? (1 ici;PUD_DOWN => 0)
+if(digitalRead(buttonPin) == LOW)...
+
+
+
+
+###### ACTIVE BUZZER_6+ NPN TRANSISTOR
+Conf Buzzer_6:
+
+***
+Lorsque vous configurez une broche GPIO en tant qu'entrée, cela signifie que vous allez lire l'état électrique de cette broche plutôt que d'y envoyer un signal. Dans le contexte de votre description, si vous configurez le GPIO18 en entrée et le connectez à l'une des bornes du bouton, vous pourrez détecter l'état du bouton (appuyé ou relâché) en lisant la valeur du GPIO18.
+
+Le bouton agit comme un interrupteur momentané : il est fermé (connecté) lorsque vous appuyez dessus et ouvert (déconnecté) lorsque vous relâchez. En configurant le GPIO18 en entrée, vous pouvez surveiller l'état du bouton. Lorsque le bouton est enfoncé, le GPIO18 sera connecté à la masse (GND), ce qui se traduira par une lecture basse (LOW) sur la broche. Lorsque le bouton est relâché, le GPIO18 ne sera pas connecté à la masse, ce qui se traduira par une lecture haute (HIGH) sur la broche.
+
+***
+Dans le contexte des signaux sonores, la fréquence détermine la hauteur du son perçu par l'oreille humaine. Les sons avec des fréquences plus élevées sont perçus comme plus aigus, tandis que les sons avec des fréquences plus basses sont perçus comme plus graves.
+
+Lorsque vous générez un signal de fréquence à l'aide de la modulation PWM (pulse-width modulation), vous activez et désactivez rapidement une sortie à un rythme très élevé pour simuler le signal souhaité. Par exemple, si vous voulez générer un signal sonore à 1000 Hz, la broche sera commutée entre un état actif et inactif (HIGH et LOW) 1000 fois par seconde pour simuler cette fréquence.
+
+
+
+########## PASSIVE BUZZER:
+-
+En revanche, softToneWrite() est spécifiquement conçu pour générer des tonalités audibles à partir d'un buzzer piezoélectrique passif. Il génère des signaux audio en modulant la fréquence du signal électrique sur une broche, créant ainsi des sons de différentes hauteurs.
+
+En résumé, bien que les deux techniques puissent impliquer une modulation entre des niveaux haut et bas, la PWM est plus générale et utilisée pour un contrôle précis de divers composants, tandis que softToneWrite() est spécifique à la génération de sons sur un buzzer piezo.
+
+-	void alertor(int pin){
+	int x;
+	double sinVal, toneVal;
+	for(x=0;x<360;x++){ // frequency of the alertor is consistent with the sine wave 
+		sinVal = sin(x * (M_PI / 180));		//Calculate the sine value
+		toneVal = 2000 + sinVal * 500;		//Add the resonant frequency and weighted sine value 
+		softToneWrite(pin,toneVal);			//output corresponding PWM
+		delay(1);
+	}
+}
+
+void stopAlertor(int pin){
+	softToneWrite(pin,0);
+}
+int main(void)
+{
+	printf("Program is starting ... \n");
+	
+	wiringPiSetup();
+	
+	pinMode(buzzerPin, OUTPUT); 
+	pinMode(buttonPin, INPUT);
+	softToneCreate(buzzerPin); //set buzzerPin
+	pullUpDnControl(buttonPin, PUD_UP);  //pull up to HIGH level
+	while(1){	
+		if(digitalRead(buttonPin) == LOW){ //button is pressed
+			alertor(buzzerPin);   // turn on buzzer
+			printf("alertor turned on >>> \n");
+		}
+#########################################################################
+
+
+###### ADC #######
+2. Use following command to compile “ADC.cpp” and generate the executable file “ADC”.
+g++ ADC.cpp -o ADC -lwiringPi -lADCDevice
+3. Then run the generated file “ADC”.
+sudo ./ADC
+
+
+
+

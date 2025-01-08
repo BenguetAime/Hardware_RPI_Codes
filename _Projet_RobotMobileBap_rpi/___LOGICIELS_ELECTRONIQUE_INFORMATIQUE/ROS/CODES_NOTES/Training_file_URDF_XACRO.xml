@@ -1,0 +1,48 @@
+<?xml version="1.0"?> 
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="simple_robot">
+
+  <!-- Définition d'une macro pour un lien -->
+  <xacro:macro name="simple_link" params="link_name link_length link_radius">
+    <link name="${link_name}">
+      
+      <visual>
+        <geometry>
+          <cylinder length="${link_length}" radius="${link_radius}" />
+        </geometry>
+      </visual>
+
+
+      <collision>
+        <geometry>
+          <cylinder length="${link_length}" radius="${link_radius}" />
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="1.0" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+      </inertial>
+
+      <joint>
+        <parent link="link_"/>
+      </joint>
+      <gazebo reference="reference_p"/> <gazebo />
+
+    </link>
+  </xacro:macro>
+
+  <!-- Utilisation de la macro pour créer deux liens -->
+  <xacro:simple_link link_name="link1" link_length="1.0" link_radius="0.1" />
+  <xacro:simple_link link_name="link2" link_length="1.5" link_radius="0.1" />
+
+  <!-- Définition de l'articulation entre les deux liens -->
+  <joint name="joint1" type="continuous">
+    <parent link="link1" />
+    <child link="link2" />
+    <origin xyz="0 0 0.5" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" velocity="1.0" />
+  </joint>
+
+</robot>
